@@ -5,7 +5,6 @@ services:
     plan: starter
     region: oregon
     ipAllowList: []
-    version: "17"
 
   # Serviço Web n8n
   - type: web
