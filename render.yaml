@@ -2,9 +2,11 @@ services:
   # Banco de dados PostgreSQL
   - type: pserv
     name: n8n-database
+    env: postgres      
     plan: starter
     region: oregon
-    ipAllowList: []
+    databaseName: postgres_db_p3ww  
+    user: user_postgres          
 
   # Serviço Web n8n
   - type: web
@@ -18,11 +20,10 @@ services:
     disk:
       name: n8n_data
       mountPath: /home/node/.n8n
-      sizeGB: 1    
+      sizeGB: 1
       
     # Variáveis de ambiente
     envVars:
-      # Configurações do servidor
       - key: N8N_PORT
         value: "5678"
       - key: N8N_PROTOCOL
@@ -32,30 +33,7 @@ services:
       - key: N8N_SECURE_COOKIE
         value: "true"
       - key: NODE_ENV
-        value: production
-        
-      # Configurações de banco de dados
-      - key: DB_TYPE
-        value: postgresdb
-      - key: DB_POSTGRESDB_HOST
-        fromService:
-          name: n8n-database
-          type: pserv
-          property: host
-      - key: DB_POSTGRESDB_PORT
-        value: "5432"
-      - key: DB_POSTGRESDB_DATABASE
-        value: n8n
-      - key: DB_POSTGRESDB_USER
-        fromService:
-          name: n8n-database
-          type: pserv
-          property: user
-      - key: DB_POSTGRESDB_PASSWORD
-        fromService:
-          name: n8n-database
-          type: pserv
-          property: password
+        value: production  
           
       # Segurança e permissões
       - key: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
