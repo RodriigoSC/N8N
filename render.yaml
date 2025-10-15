@@ -1,17 +1,8 @@
 services:
-  # Banco de dados PostgreSQL
-  - type: pserv
-    name: n8n-database
-    env: postgres      
-    plan: starter
-    region: oregon
-    databaseName: postgres_db_p3ww  
-    user: user_postgres          
-
   # Serviço Web n8n
   - type: web
     name: n8n
-    env: docker
+    runtime: docker      
     plan: starter
     region: oregon
     autoDeploy: true
@@ -24,6 +15,13 @@ services:
       
     # Variáveis de ambiente
     envVars:
+      # Conecta ao banco de dados definido na seção 'databases' abaixo
+      - key: DATABASE_URL
+        fromDatabase:
+          name: postgres_db_p3ww
+          property: connectionString
+          
+      # Configurações do servidor
       - key: N8N_PORT
         value: "5678"
       - key: N8N_PROTOCOL
@@ -33,7 +31,7 @@ services:
       - key: N8N_SECURE_COOKIE
         value: "true"
       - key: NODE_ENV
-        value: production  
+        value: production
           
       # Segurança e permissões
       - key: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
@@ -45,6 +43,15 @@ services:
       - key: N8N_LOG_LEVEL
         value: info
         
-      # Webhooks
+      # Webhooks (O valor é injetado pelo Render, sync: false evita commits)
       - key: WEBHOOK_URL
         sync: false
+
+# Seção dedicada para a definição do banco de dados
+databases:
+  - name: n8n-database
+    databaseName: n8n     # Nome interno do banco de dados
+    user: n8n_user        # Nome do usuário que será criado
+    plan: starter
+    region: oregon
+    ipAllowList: []       # Impede o acesso externo ao banco de dados
