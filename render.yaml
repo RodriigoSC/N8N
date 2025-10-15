@@ -5,7 +5,7 @@ services:
     plan: starter
     region: oregon
     ipAllowList: []
-    postgresMajorVersion: 15
+    version: "17"
 
   # Serviço Web n8n
   - type: web
@@ -19,12 +19,8 @@ services:
     disk:
       name: n8n_data
       mountPath: /home/node/.n8n
-      sizeGB: 1
-    
-    # Dependência do banco de dados
-    dependsOn:
-      - n8n-database
-    
+      sizeGB: 1    
+      
     # Variáveis de ambiente
     envVars:
       # Configurações do servidor
@@ -38,7 +34,7 @@ services:
         value: "true"
       - key: NODE_ENV
         value: production
-      
+        
       # Configurações de banco de dados
       - key: DB_TYPE
         value: postgresdb
@@ -61,17 +57,17 @@ services:
           name: n8n-database
           type: pserv
           property: password
-      
+          
       # Segurança e permissões
       - key: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
         value: "true"
       - key: N8N_ENCRYPTION_KEY
         generateValue: true
-      
+        
       # Logging
       - key: N8N_LOG_LEVEL
         value: info
-      
+        
       # Webhooks
       - key: WEBHOOK_URL
         sync: false
